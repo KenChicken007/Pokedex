@@ -1,32 +1,32 @@
 import React, { useState } from "react";
 
-export default function Card({ pokemon, loading }) {
+export default function Card({ pokemon, isLoading }) {
   const [flippedIndex, setFlippedIndex] = useState(true);
 
   const flipCard = (index) => {
     setFlippedIndex(index === flippedIndex ? -1 : index);
   };
 
+  function loading() {
+    return "....Loading";
+  }
+
   const template = (item) => {
     return (
       <>
-        {loading ? (
-          "...Loading"
-        ) : (
-          <div className="card-front">
-            <div className="image">
-              <img src={item.sprites.front_default} alt="Charmander" />
-            </div>
-            <div className="info">
-              <h1 className="name">{item.name}</h1>
-              <div className="type">
-                {item.types.map((poke) => {
-                  return <h2 key={poke.slot}>{poke.type.name}</h2>;
-                })}
-              </div>
+        <div className="card-front">
+          <div className="image">
+            <img src={item.sprites.front_default} alt="Charmander" />
+          </div>
+          <div className="info">
+            <h1 className="name">{item.name}</h1>
+            <div className="type">
+              {item.types.map((poke) => {
+                return <h2 key={poke.slot}>{poke.type.name}</h2>;
+              })}
             </div>
           </div>
-        )}
+        </div>
       </>
     );
   };

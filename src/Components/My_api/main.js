@@ -46,7 +46,6 @@ export default function Main() {
     });
   }, [url]);
 
-  console.log(filteredPokemon);
   return (
     <>
       <Header />

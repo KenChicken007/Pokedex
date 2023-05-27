@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 
 const Search = ({ setFilteredPokemon }) => {
   const [searchQuery, setsearchQuery] = useState("");
@@ -29,26 +29,49 @@ const Search = ({ setFilteredPokemon }) => {
     return data;
   }
 
-  useEffect(() => {
-    if (num.current < 1) {
-      fetchAllPoke().then((data) => {
+  async function storeData() {
+    if (allData.length < 1) {
+      await fetchAllPoke().then((data) => {
         setAlldata(data);
         console.log("Data: ", data);
       });
-      num.current += 1;
     }
-  }, []);
+  }
 
-  function HandleSearch() {
+  // useEffect(() => {
+  //   if (num < 1) {
+  //     fetchAllPoke().then((date) => {
+  //       setAlldata(data);
+  //       console.log("Data: ", data);
+  //     });
+  //   }
+  // }, []);
+
+  const HandleSearch = async () => {
+    await storeData();
+
     const filteredPokemon = allData.filter((poke) => {
       return poke.name.includes(searchQuery.toLowerCase());
     });
     if (filteredPokemon.length < 1) {
-      alert("No Such Pokemon Found");
+      alert(
+        `${num.current > 1 ? "No Such Pokemon Found" : "Click Search Again"}`
+      );
     } else {
       setFilteredPokemon(filteredPokemon);
     }
-  }
+    num.current++;
+    console.log(num);
+    console.log("Filtered pokemon: ", filteredPokemon);
+  };
+
+  // async function HandleSearch() {
+  //   const res = await fetch(
+  //     `https://pokeapi.co/api/v2/pokemon/${searchQuery.toLowerCase()}`
+  //   );
+  //   const jSON = await res.json();
+  //   console.log(jSON);
+  // }
 
   return (
     <>
@@ -63,7 +86,7 @@ const Search = ({ setFilteredPokemon }) => {
         <button
           className="SearchBtn"
           onClick={
-            searchQuery.length < 1 ? setFilteredPokemon("") : HandleSearch
+            searchQuery.length < 1 ? () => setFilteredPokemon("") : HandleSearch
           }
         >
           Search
